@@ -6,7 +6,7 @@ const router = express.Router();
 router.get(
   '/daily',
   (req, res, next) => {
-    res.send('Daily stat');
+    console.log('daily stat');
     next();
   },
   daily,
