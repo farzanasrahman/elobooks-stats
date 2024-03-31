@@ -23,6 +23,16 @@ export const daily = async (req, res) => {
     //.compile();
     .execute();
 
+  const totalAmounts = sales_data.map((sale) => parseInt(sale.totalAmount));
+  const totalAmountSum_sales = totalAmounts.reduce(
+    (total, amount) => total + amount,
+    0,
+  );
+
+  console.log('Total amount sum:', totalAmountSum_sales);
+
+  console.log('Total amount sum:', totalAmounts);
+
   const purchase_data = await db
     .withSchema('org_HF49emb9HsTo8tuB::ins_M2SZ1pT5eATyvcx8')
     .selectFrom('purchase_copy')
@@ -33,7 +43,17 @@ export const daily = async (req, res) => {
     //.compile();
     .execute();
 
-  console.log(sales_data);
+  const totalAmount_purchase = purchase_data.map((purchase) =>
+    parseInt(purchase.totalAmount),
+  );
+  const totalAmountSum_purchase = totalAmount_purchase.reduce(
+    (total, amount) => total + amount,
+    0,
+  );
+  console.log('Total amount sum:', totalAmountSum_purchase);
+
+  console.log('Total amount sum:', totalAmount_purchase);
+  //console.log(sales_data);
   console.log(purchase_data);
   console.log(startOfDay);
   console.log(endOfDay);
