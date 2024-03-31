@@ -1,4 +1,5 @@
 import { db } from '../config/db.js';
+import emailService from '../email/emailService.js';
 
 export const daily = async (req, res) => {
   //1. get purchase data from db and calculate totalsum
@@ -36,7 +37,6 @@ export const daily = async (req, res) => {
   const purchase_data = await db
     .withSchema('org_HF49emb9HsTo8tuB::ins_M2SZ1pT5eATyvcx8')
     .selectFrom('purchase_copy')
-    //.select(({ fn }) => [fn.sum('totalAmount').as('total')])
     .select(['id', 'purchaseDate', 'totalAmount'])
     .where('purchaseDate', '>=', startOfDay.toISOString())
     .where('purchaseDate', '<', endOfDay.toISOString())
@@ -50,13 +50,28 @@ export const daily = async (req, res) => {
     (total, amount) => total + amount,
     0,
   );
+
   console.log('Total amount sum:', totalAmountSum_purchase);
 
   console.log('Total amount sum:', totalAmount_purchase);
-  //console.log(sales_data);
+
+  await emailService.sendMail({
+    from: 'process.env.EMAIL_USER', // sender address
+    to: 'farzana.sadia01@northsouth.edu', // list of receivers
+    subject: 'testing email from vscode', // Subject line
+    text: `Daily statistics: Total Purchase: ${totalAmountSum_purchase}  Total Sales: ${totalAmountSum_sales}`, // plain text body
+    html: `<h1>Daily Statistics:</h1>
+    <p>Total Purchase:  ${totalAmountSum_purchase} Taka.</p>
+    <p>Total Sale: ${totalAmountSum_sales} Taka.</p>`, // html body
+  });
+  console.log(sales_data);
   console.log(purchase_data);
   console.log(startOfDay);
   console.log(endOfDay);
-  res.send('Daily stat');
+
+  //sendMail
+  res.send(
+    `Daily statistics: Total Purchase: ${totalAmountSum_purchase}  Total Sales: ${totalAmountSum_sales}`,
+  );
 };
 //export default { daily };
