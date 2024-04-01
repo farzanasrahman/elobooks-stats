@@ -20,7 +20,8 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.12",
     "pg": "^8.11.3",
-    "postgres": "^3.4.3"
+    "postgres": "^3.4.3",
+    "tzdata": "^1.0.40"
   },
   "devDependencies": {
     "drizzle-kit": "^0.20.14",

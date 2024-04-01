@@ -1,12 +1,13 @@
 import { db } from '../config/db.js';
 import emailService from '../email/emailService.js';
+import { getDailyStatTemplate } from '../utils/shared.js';
 
+process.env.TZ = 'Asia/Dhaka';
+/**
+ * Fetches total Sum of Sales And purchase and sends mail
+ */
 export const daily = async (req, res) => {
-  //1. get purchase data from db and calculate totalsum
-  //2. get sales data deom db and calculate totalsum
-  //3. create a simple html template using those values
-  //4. sendmail using html template
-  const yesterday = new Date();
+  const yesterday = new Date(new Date().toLocaleString());
   yesterday.setDate(yesterday.getDate() - 1);
   yesterday.setUTCHours(0, 0, 0, 0);
 
@@ -25,14 +26,10 @@ export const daily = async (req, res) => {
     .execute();
 
   const totalAmounts = sales_data.map((sale) => parseInt(sale.totalAmount));
-  const totalAmountSum_sales = totalAmounts.reduce(
+  const totalSalesSum = totalAmounts.reduce(
     (total, amount) => total + amount,
     0,
   );
-
-  console.log('Total amount sum:', totalAmountSum_sales);
-
-  console.log('Total amount sum:', totalAmounts);
 
   const purchase_data = await db
     .withSchema('org_HF49emb9HsTo8tuB::ins_M2SZ1pT5eATyvcx8')
@@ -40,38 +37,24 @@ export const daily = async (req, res) => {
     .select(['id', 'purchaseDate', 'totalAmount'])
     .where('purchaseDate', '>=', startOfDay.toISOString())
     .where('purchaseDate', '<', endOfDay.toISOString())
-    //.compile();
     .execute();
 
-  const totalAmount_purchase = purchase_data.map((purchase) =>
+  const totalPurchase = purchase_data.map((purchase) =>
     parseInt(purchase.totalAmount),
   );
-  const totalAmountSum_purchase = totalAmount_purchase.reduce(
+  const totalPurchaseSum = totalPurchase.reduce(
     (total, amount) => total + amount,
     0,
   );
 
-  console.log('Total amount sum:', totalAmountSum_purchase);
-
-  console.log('Total amount sum:', totalAmount_purchase);
-
   await emailService.sendMail({
-    from: 'process.env.EMAIL_USER', // sender address
-    to: 'farzana.sadia01@northsouth.edu', // list of receivers
-    subject: 'testing email from vscode', // Subject line
-    text: `Daily statistics: Total Purchase: ${totalAmountSum_purchase}  Total Sales: ${totalAmountSum_sales}`, // plain text body
-    html: `<h1>Daily Statistics:</h1>
-    <p>Total Purchase:  ${totalAmountSum_purchase} Taka.</p>
-    <p>Total Sale: ${totalAmountSum_sales} Taka.</p>`, // html body
+    from: 'process.env.EMAIL_USER',
+    to: 'farzana.sadia01@northsouth.edu',
+    subject: 'Elobooks Statistics',
+    text: `Daily statistics: Total Purchase: ${totalPurchaseSum}  Total Sales: ${totalSalesSum}`,
+    html: getDailyStatTemplate(totalSalesSum, totalPurchaseSum),
   });
-  console.log(sales_data);
-  console.log(purchase_data);
-  console.log(startOfDay);
-  console.log(endOfDay);
-
-  //sendMail
   res.send(
-    `Daily statistics: Total Purchase: ${totalAmountSum_purchase}  Total Sales: ${totalAmountSum_sales}`,
+    `Daily statistics: Total Purchase: ${totalPurchaseSum}  Total Sales: ${totalSalesSum}`,
   );
 };
-//export default { daily };
