@@ -1,10 +1,15 @@
 /**
  * Returns string value of html template after getting total sales and purchase amount
- * @param {number} totalSalesAmount
- * @param {number} totalPurchaseAmount
+ * @param {number} totalSalesAmount - Total selling amount
+ * @param {number} totalPurchaseAmount - Total purchasing amount
+ * @param {string} date - Stat date
  * @returns string
  */
-export const getDailyStatTemplate = (totalSalesAmount, totalPurchaseAmount) => {
+export const getDailyStatTemplate = (
+  totalSalesAmount,
+  totalPurchaseAmount,
+  date,
+) => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office"><head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -156,7 +161,7 @@ export const getDailyStatTemplate = (totalSalesAmount, totalPurchaseAmount) => {
                         <td align="center" class="esd-block-text es-p20t es-p5b"><h2 style="color: #d40c29;">— Daily Statistics —</h2></td>
                        </tr>
                        <tr>
-                        <td align="center" class="esd-block-text"><h4 class=" es-m-txt-c">${new Date().toLocaleDateString()}</h4></td>
+                        <td align="center" class="esd-block-text"><h4 class=" es-m-txt-c">${date}</h4></td>
                        </tr>
                       </tbody>
                      </table></td>
