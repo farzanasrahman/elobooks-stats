@@ -12,7 +12,6 @@ export const daily = async (req, res) => {
     .selectFrom('tenants')
     .select(['id'])
     .execute();
-  console.log(tenants);
 
   const tenantIds = tenants.map((tenant) => tenant.id);
 
@@ -61,9 +60,6 @@ export const daily = async (req, res) => {
     const totalPurchaseSum = totalPurchase.reduce(
       (total, amount) => total + amount,
       0,
-    );
-    console.log(
-      `Company: ${companyName}, purchases: ${totalPurchaseSum} Taka, sales: ${totalSalesSum} taka`,
     );
 
     await emailService.sendMail({
