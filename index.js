@@ -1,7 +1,8 @@
 import app from './src/app.js';
+import { env } from './src/config/env.js';
 
-const server = app.listen(3000, () => {
-  console.log('Listening on port 3000');
+const server = app.listen(env.PORT, () => {
+  console.log(`Listening on port ${env.PORT}`);
 });
 
 const SIGNALS = ['SIGINT', 'SIGTERM', 'SIGHUP'];

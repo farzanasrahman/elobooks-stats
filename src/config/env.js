@@ -11,4 +11,5 @@ export const env = cleanEnv(process.env, {
   DB_USER: str(),
   DB_PASSWORD: str(),
   DB_NAME: str(),
+  PORT: num({ default: 8080 }),
 });
