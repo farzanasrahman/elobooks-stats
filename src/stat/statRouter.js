@@ -3,12 +3,6 @@ import { daily } from './statService.js';
 
 const router = express.Router();
 
-router.get(
-  '/daily',
-  (req, res, next) => {
-    next();
-  },
-  daily,
-);
+router.get('/daily', daily);
 
 export default router;
