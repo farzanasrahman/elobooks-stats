@@ -20,6 +20,7 @@ app.use((req, res, next) => {
 
 // eslint-disable-next-line no-unused-vars
 app.use((error, req, res, _) => {
+  console.log(error);
   error.status = error.status || 500;
   res.status(error.status);
   res.send(`${error.status} error, path not found!`);
